@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Oswald:wght@500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Lobster', sans-serif;
+    font-size: 8rem;
+    color: #FF677D;
+}
+
+h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 5rem;
+    color: #FF677D;
+}
+
+h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #FF677D;
+}
+
+p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    color: #FFB5A7;
+}
+
+.section_padding {
+    padding: 40px 80px;
+}
+
+
+/* header */
+
+#navbar {
+    background-color: #F8EDEB;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;;
+    padding: 1rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    top: 0;
+    left: 0;
+    position: sticky;
+    z-index: 999;
+}
+
+#navbar svg {
+    width: 60px;
+    height: 60px;
+}
+
+#navbar-links {
+    display: flex;
+    gap: 4rem;
+    padding: 0 3rem;
+}
+
+#navbar-links a {
+    text-decoration: none;
+    color: #FFB5A7;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+#navbar-links a:hover {
+    color: #FF677D;
+}
+
+#navbar-links a.active::after {
+    content: "";
+    background: #FFB5A7;
+    position: absolute;
+    width: 70%;
+    height: 3px;
+    bottom: -4px;
+    left: 0px;
+}
+
+/* hero section */
+
+#hero_section {
+    background-color: #F8EDEB;
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#hero_info {
+    position: relative;
+    left: -4rem;
+}
+
+
+#hero_info button {
+    margin-top: 3rem;
+    background-color: #FFB5A7;
+    border: 0 solid #E5E7EB;
+    box-sizing: border-box;
+    color: #F8EDEB;
+    display: flex;
+    font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1.5rem;
+    font-weight: 700;
+    justify-content: center;
+    line-height: 1.75rem;
+    padding: .75rem 1.65rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none #000000 solid;
+    text-decoration-thickness: auto;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    cursor: pointer;
+    transform: rotate(-2deg);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+#hero_info button:focus {
+    outline: 0;
+}
+
+#hero_info button:after {
+    content: '';
+    position: absolute;
+    border: 1px solid #000000;
+    bottom: 4px;
+    left: 4px;
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+}
+
+#hero_info button:hover:after {
+    bottom: 2px;
+    left: 2px;
+}
+
+/* products */
+
+#products {
+    background-color: #FFB5A7;
+    display: flex;
+    flex-direction: column;
+}
+
+#products h2 {
+    color: #F8EDEB;
+    text-align: center;
+}
+
+#categories {
+    padding: 5rem 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.category {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: #F8EDEB;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.2);
+    border-radius: 2rem;
+    cursor: pointer;
+}
+
+.category:hover {
+    transform: scale(1.05);
+    transition: all 0.7s ease-out;
+    box-shadow: none;
+}
+
+.category img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category h3 {
+    padding: 20px;
+    line-height: 1;
+    display: inline-block;
+}
+
+/* CRUD */
+
+#crud {
+    margin-top: 5rem;
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.crudForm {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.crudForm label {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    gap: 10px;
+}
+
