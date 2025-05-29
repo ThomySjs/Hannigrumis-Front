@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hannigrumis</title>
+    <link rel="stylesheet" href="./static/styles/styles.css">
+    <link rel="stylesheet" href="./static/styles/admin.css">
+    <!-- Fontawesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+</head>
+<body>
+    <main>
+        <section id="loginFormContainer">
+            <form id="loginForm" onsubmit="return app.login(event, this)">
+                <label>
+                    Correo
+                </label>
+                <input type="text" name="email"/>
+                <label>
+                    Contraseña
+                </label>
+                <input type="text" name="password"/>
+                <input type="submit"/>
+            </form>
+        </section>
+    </main>
+    <script src="./static/js/config.js" type="module"></script>
+    <script src="./static/js/admin.js" type="module"></script>
+</body>
+</html>

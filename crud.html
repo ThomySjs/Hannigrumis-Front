@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hannigrumis</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./static/styles/crud.css">
+    <!-- Fontawesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 </head>
 <body>
     <section id="navbar">
-        <a href="#">
+        <a href="index.html">
             <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="75" cy="75" r="75" fill="#F0F0F0"/>
                 <circle cx="75" cy="75" r="72" fill="#FFB5A7"/>
@@ -39,26 +41,20 @@
                 <circle cx="60" cy="49" r="1" fill="#FFB5A7"/>
             </svg>    
         </a>
-        <div id="navbar-links">
-            <a href="#" class="active">Home</a>
-            <a href="#products">Productos</a>
-            <a href="#contact">Contacto</a>
-        </div>
+        <a href="" >
+            <i class="fa-solid fa-right-from-bracket" style="color: #637aa1; font-size: 2rem;"></i>
+        </a>
+        </ul>
     </section>
-
     <section id="crud">
-        <select id="crudOptions">
-            <option value="add" >Add product</option>
-            <option value="edit">Edit product</option>
-        </select>
+        <div id="formButtons">
+        </div>
         <div id="formContainer">
         </div>
+        <div id="listContainer">
+        </div>
     </section>
+    <script src="./static/js/config.js" type="module"></script>
     <script src="./static/js/crud.js" type="module"></script>
-    <script>
-        document.getElementById("crudOptions").addEventListener("change", (event) => {
-            app.loadForm(event.target.value);
-        })
-    </script>
 </body>
 </html>

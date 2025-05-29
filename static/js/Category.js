@@ -1,40 +1,43 @@
 export class Category {
-    constructor(aName, aDescription, anImagePath) {
-        this._name = aName;
-        this._description = aDescription;
-        this._imagePath = anImagePath;
-        this._products = [];
+    constructor(anId, aName, aDescription, anImagePath) {
+        this.id = anId;
+        this.name = aName;
+        this.description = aDescription;
+        this.imagePath = anImagePath;
+    }
+
+    getId() {
+        return this.id;
     }
 
     getName() {
-        return this._name;
+        return this.name;
     }
 
     getDescription() {
-        return this._description;
+        return this.description;
     }
 
     getImagePath() {
-        return this._imagePath;
+        return this.imagePath;
     }
 
     setName(aName) {
-        this._name = aName;
+        this.name = aName;
     }
 
     setDescription(aDescription) {
-        this._description = aDescription;
+        this.description = aDescription;
     }
 
     setImagePath(anImagePath) {
-        this._imagePath = anImagePath;
+        this.imagePath = anImagePath;
     }
 
-    addProduct(aProduct) {
-        this._products.push(aProduct);
+    fromJson(data) {
+        this.name = data.name;
+        this.description = data.description;
+        this.imagePath = data.imagePath;
     }
 
-    getProducts() {
-        return this._products;
-    }
 }

@@ -1,13 +1,9 @@
-import { App } from "./App.js";
+import { CrudApp } from "./CrudApp.js";
 
 async function main() {
-    const app = new App();
+    const app = new CrudApp();
     window.app = app;
     await window.app.init();
-
-    const formOperation = document.getElementById("crudOptions");
-
-    window.app.loadForm(formOperation.value);
 }
 
 main();

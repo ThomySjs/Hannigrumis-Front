@@ -1,33 +1,50 @@
 export class Product {
 
-    constructor(aName, aDescription, anImagePath) {
-        this._name = aName;
-        this._category = aDescription;
-        this._image_path = anImagePath;
+    constructor(anID ,aName, aCategory, anImagePath) {
+        this.id = anID;
+        this.name = aName;
+        this.category = aCategory;
+        this.imagePath = anImagePath;
+    }
+
+    getID() {
+        return this.id;
     }
 
     getName() {
-        return this._name;
+        return this.name;
     }
 
-    getDescription() {
-        return this._description;
+    getCategory() {
+        return this.category;
     }
 
     getImagePath() {
-        return this._image_path;
+        return this.imagePath;
     }
 
+    setID(anID) {
+        this.id = anID;
+    } 
+
     setName(aName) {
-        this._name = aName;
+        this.name = aName;
     }
 
     setCategory(aCategory) {
-        this._category= aCategory;
+        this.category= aCategory;
     }
 
     setImagePath(anImagePath) {
-        this._image_path = anImagePath;
+        this.image_path = anImagePath;
+    }
+
+    fromJson(json) {
+        console.log(json);
+        this.id = json.id;
+        this.name = json.name;
+        this.category = json.categoryId.name;
+        this.imagePath = json.imagePath;
     }
 
 }
