@@ -46,12 +46,12 @@ p {
 /* header */
 
 #navbar {
+    height:65px;
     background-color: #F8EDEB;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    display: flex;;
+    display: flex;
+    flex-direction: column;
     padding: 0 1.5rem;
-    align-items: center;
-    justify-content: space-between;
     top: 0;
     left: 0;
     position: sticky;
@@ -63,39 +63,27 @@ p {
     height: 60px;
 }
 
-ul{
-    list-style: none;
-}
-
-#navLinks {
-    display: inline-block;
-    height: 65px;
-    width: 60px;
-}
-
-#account {
-    justify-content: center;
-}
-
-#navOptions {
-    position: absolute;
-    display: none;
-    transform: translateX(-40px);
-}
-
-#navOptions > li {
-    text-align: center;
-    padding: 1.5rem;
-    width: 80px;
-    background-color: var(--navbar-color);
-}
-
-#account:hover > #navOptions {
-    display: block;
-}
-
-li > a {
+#mainButtons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+}
+
+#userButtons {
+    display: none;
+    flex-direction: column;
+    width: 150px;
+    background-color: var(--navbar-color);
+    text-align: center;
+    align-self: flex-end;
+    gap: 10px;
+}
+
+#userButtons a {
+    padding: 0.5rem 0;
+    cursor: pointer;
 }
 
 

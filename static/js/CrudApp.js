@@ -103,6 +103,12 @@ export class CrudApp {
         return false;
     }
 
+    logout() {
+        sessionStorage.removeItem("AuthorizationToken");
+
+        window.location.href = "admin.html";
+    }
+
     ////////////////////////////
     /// Request data methods ///
     ////////////////////////////
@@ -588,5 +594,20 @@ export class CrudApp {
         }
 
         return false;
+    }
+
+    ///////////////////////
+    /// Event listeners ///
+    ///////////////////////
+
+    showUserButtons() {
+        const userButtons = document.getElementById("userButtons");
+
+        if (userButtons.style.display === "none") {
+            userButtons.style.display = "flex";
+        }
+        else {
+            userButtons.style.display = "none";
+        }
     }
 }
