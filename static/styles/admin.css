@@ -35,7 +35,7 @@ label {
     color: #ffffff;
 }
 
-input[type="text"] {
+.user-input {
     width: 25rem;
     height: 3rem;
     font-size: 2rem;

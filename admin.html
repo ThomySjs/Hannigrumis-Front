@@ -12,15 +12,15 @@
 <body>
     <main>
         <section id="loginFormContainer">
-            <form id="loginForm" onsubmit="return app.login(event, this)">
+            <form id="loginForm" onsubmit="app.login(event, this)">
                 <label>
                     Correo
                 </label>
-                <input type="text" name="email"/>
+                <input type="email" name="email" class="user-input"/>
                 <label>
                     Contraseña
                 </label>
-                <input type="text" name="password"/>
+                <input type="password" name="password" class="user-input"/>
                 <input type="submit"/>
             </form>
         </section>
