@@ -227,7 +227,7 @@ p {
     text-align: center;
 }
 
-#categories {
+#cards-container {
     padding: 5rem 0;
     display: flex;
     justify-content: space-evenly;
@@ -235,7 +235,11 @@ p {
     gap: 2rem;
 }
 
-.category {
+#cards-container h3{
+    color: var(--mid-color);
+}
+
+.card {
     width: 350px;
     display: flex;
     flex-direction: column;
@@ -437,6 +441,10 @@ p {
 
     #whatsapp-logo {
         font-size: 3.5rem;
+    }
+
+    #contact-form {
+        width: 80%;
     }
 }
 

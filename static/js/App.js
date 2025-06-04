@@ -28,7 +28,9 @@ export class App {
 
     loadProducts(data) {
         data.forEach((product) => {
-            const newProduct = new Product(product.name, product.description, product.imagePath);
+            const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
+            this.products.push(newProduct);
+        });
 
         })
     }
@@ -63,6 +65,10 @@ export class App {
         return this._products;
     }
 
+    getProductsByCategory(categoryName) {
+        return this.products.filter((product) => product.getCategory() === categoryName);
+    }
+
     addCategory(category) {
         this._categories.push(category);
     }
@@ -93,6 +99,37 @@ export class App {
             container.innerHTML += categoryComponent;
         });
     }
+
+    createProductCards(categoryName) {
+        const container = document.getElementById("cards-container");
+        container.innerHTML = "";
+
+        const products = this.getProductsByCategory(categoryName);
+
+        if (products.length < 1) {
+            const errorMessage =  `
+                <h3> Por el momento no hay productos para esta categoria :( </h3>
+            `;
+            container.insertAdjacentHTML("beforeend", errorMessage);
+        }
+        else {
+            products.forEach((product) => {
+                const productCard =  `
+                    <div class="card">
+                        <img src="${this.backendUrl + this.imageRoute + product.getImagePath()}" alt="${product.getName()}" />
+                        <h2>${product.getName()}</h2>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML("beforeend", productCard);
+            });
+        }
+    }
+
+    ///////////////////////
+    /// Functionalities ///
+    ///////////////////////
+
 
     showNavbarLinks() {
         const navbarLinks = document.getElementById("navbar-links");
