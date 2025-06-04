@@ -100,8 +100,19 @@
     
     <section id="contact" class="section_padding">
         <h2>Contacto</h2>
+        <form method="POST" id="contact-form">
+            <input type="email" name="email" placeholder="Correo" required>
+            <input type="text" name="name" placeholder="Nombre">
+            <input type="tel" name="phone" placeholder="Numero de telefono" required> 
+            <textarea name="message" placeholder="Mensaje"></textarea>
+            <input type="submit">
+        </form>
     </section>
-    <script src="./static/js/config.js" type="module"></script>
+
+    <script src="./static/js/config.js"></script>
     <script src="./static/js/index.js" type="module"></script>
+    <script>
+        document.getElementById("contact-form").action = "https://formsubmit.co/" + window.env.CONTACT_EMAIL;
+    </script>
 </body>
 </html>
