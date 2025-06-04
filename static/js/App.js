@@ -4,8 +4,6 @@ import { Product } from "./Product.js"
 
 export class App {
     constructor() {
-        this._categories = [];
-        this._products = [];
         this.backendUrl = window.env.API_URL;
         this.categoryRoute = window.env.CATEGORY_ROUTE;
         this.imageRoute = window.env.IMAGE_ROUTE;
@@ -14,15 +12,26 @@ export class App {
 
     async init() {
         
-        await this.getData("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
+        await this.requestProductsAndCategories();
         this.createCategoryCards();
 
     }
 
+    ////////////////////////////
+    /// Request data methods ///
+    ////////////////////////////
+
+    async requestProductsAndCategories() {
+        this.products = [];
+        this.categories = [];
+        await this.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
+        await this.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
+    }
+ 
     loadCategories(data) {
         data.forEach((category) => {
             const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
-            this.addCategory(newCategory);
+            this.categories.push(newCategory);
         });
     }
 
@@ -32,28 +41,36 @@ export class App {
             this.products.push(newProduct);
         });
 
-        })
     }
 
-    async getData(method, route, header, content, responseFunction) {
+    async apiRequest(method, route, header, content, responseFunction) {
         try {
             const response = await fetch(this.backendUrl + route, {
-                method : method,
-                header : header,
-                body : content
+                method: method,
+                headers: header,
+                body: content
             });
 
-            if(!response.ok) {
-                throw new Error("Response status:" + response.status);
+            if (!response.ok) {
+                return false;
             }
-    
-            if (responseFunction != null) {
-                const data = await response.json();
-                responseFunction(data);
+
+            if (responseFunction) {
+                try {
+                    const data = await response.json();
+                    
+                    responseFunction(data);
+                } catch (e) {
+                    responseFunction();
+                }
+                finally {
+                    return true;
+                }
+            } else {
+                return true;
             }
-        }
-        catch (error) {
-            console.error(error.message);
+        } catch (error) { 
+            return false;
         }
     }
 
@@ -83,14 +100,17 @@ export class App {
         })
     }
 
-    /* Components */
+    //////////////////
+    /// Components ///
+    //////////////////
 
     createCategoryCards() {
-        const container = document.getElementById("categories");
+        const container = document.getElementById("cards-container");
+        container.innerHTML = "";
 
-        this._categories.forEach((category) => {
+        this.categories.forEach((category) => {
             let categoryComponent =  `
-                <div class="category" id="${category.getName()}">
+                <div class="card" id="${category.getName()}" onclick="app.createProductCards('${category.getName()}')">
                     <img src="${this.backendUrl + this.imageRoute + category.getImagePath()}" alt="Amigurumis" />
                     <h3>${category.getName()}</h3>
                 </div>
