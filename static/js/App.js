@@ -113,6 +113,9 @@ export class App {
                 <div class="card" id="${category.getName()}" onclick="app.createProductCards('${category.getName()}')">
                     <img src="${this.backendUrl + this.imageRoute + category.getImagePath()}" alt="Amigurumis" />
                     <h3>${category.getName()}</h3>
+                    <div class="overlay">
+                        <p>${category.getDescription()}</p>
+                    </div>
                 </div>
             `;
 
@@ -137,7 +140,7 @@ export class App {
                 const productCard =  `
                     <div class="card">
                         <img src="${this.backendUrl + this.imageRoute + product.getImagePath()}" alt="${product.getName()}" />
-                        <h2>${product.getName()}</h2>
+                        <h3>${product.getName()}</h3>
                     </div>
                 `;
 
