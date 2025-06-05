@@ -1,5 +1,5 @@
-import { Category } from "./Category.js";
-import { Product } from "./Product.js"
+import { Category } from "./model/Category.js";
+import { Product } from "./model/Product.js"
 
 
 export class App {
