@@ -3,6 +3,6 @@ window.env = {
     CATEGORY_ROUTE : "category/",
     PRODUCT_ROUTE : "product/",
     IMAGE_ROUTE : "images/",
-    LOGIN_ROUTE : "user-auth",
+    LOGIN_ROUTE : "login",
     CHECK_TOKEN_ROUTE : "valid-user"
 }
