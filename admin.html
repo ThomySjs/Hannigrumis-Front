@@ -10,9 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 </head>
 <body>
-    <main>
-        <section id="loginFormContainer">
-            <form id="loginForm" onsubmit="app.login(event, this)">
+    <div class="container">
+        <div class="image-container">
+            <h1>Hannigrumis</h1>
+            <img src="./static/images/admin.png" alt="">
+        </div>
+        <div class="form-container">
+            <form id="login-form" onsubmit="app.login(event, this)">
                 <label>
                     Correo
                 </label>
@@ -21,10 +25,10 @@
                     Contraseña
                 </label>
                 <input type="password" name="password" class="user-input"/>
-                <input type="submit"/>
+                <button type="submit">Ingresar</button>
             </form>
-        </section>
-    </main>
+        </div>
+    </div>
     <script src="./static/js/config.js" type="module"></script>
     <script src="./static/js/admin.js" type="module"></script>
 </body>
