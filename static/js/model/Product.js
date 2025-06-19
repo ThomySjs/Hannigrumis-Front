@@ -1,5 +1,4 @@
 export class Product {
-
     constructor(anID ,aName, aCategory, anImagePath) {
         this.id = anID;
         this.name = aName;

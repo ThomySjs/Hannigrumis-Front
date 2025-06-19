@@ -6,14 +6,13 @@ import { ApiRequest } from "./ApiRequest.js";
 export class CrudApp {
 
     constructor() {
-        this.categories = [];
-        this.products = [];
         this.backendUrl = window.env.API_URL;
         this.categoryRoute = window.env.CATEGORY_ROUTE;
         this.imageRoute = window.env.IMAGE_ROUTE;
         this.productRoute = window.env.PRODUCT_ROUTE;
         this.checkTokenRoute = window.env.CHECK_TOKEN_ROUTE;
         this.loginRoute = window.env.LOGIN_ROUTE;
+        this.passwordRecoveryRoute = window.env.RECOVERY_ROUTE;
     }
 
     async init() {
@@ -21,7 +20,7 @@ export class CrudApp {
         const Authorized = await this.checkAuthorization();
 
         if (!Authorized) {
-            window.location.href = "admin.html"
+            window.location.href = "login.html"
         }
 
         await this.requestProductsAndCategories()
@@ -29,27 +28,6 @@ export class CrudApp {
         this.createSelectButtons();
         this.createAddProductForm();
         this.createProductList();
-
-        document.getElementById("crudSelection").addEventListener("change", (event) => {
-            const button = document.getElementById("addButton")
-            if (event.target.value === "product") {
-                button.addEventListener("click", (e) => {
-                    this.createAddProductForm();
-                    this.showForm();
-                });
-
-                this.reloadTable(event.target.value)
-            }
-            if (event.target.value === "category") {
-                button.addEventListener("click", (e) => {
-                    this.createAddCategoryForm();
-                    this.showForm();
-                });
-
-                this.reloadTable(event.target.value);
-            }
-        })
-        console.log(this.products)
     }
 
     ///////////////////////
@@ -109,21 +87,70 @@ export class CrudApp {
                 window.location.href = "crud.html"
             }
         });
-
-        if (!validUser) {
-            alert("Invalid credentials.")
-            form.reset();
-        }
-
         return false;
     }
 
     logout() {
         sessionStorage.removeItem("AuthorizationToken");
 
-        window.location.href = "admin.html";
+        window.location.href = "login.html";
     }
 
+    checkPasswordMatch(password1, password2) {
+        return password1 == password2;
+    }
+
+    getRecoveryCode(target) {
+        ApiRequest.apiRequest("get", this.passwordRecoveryRoute + "?email=" + target.email.value, {}, null, (stat, response) => {
+            if (stat == 200) {
+                window.components.recoveryCodeForm(target.closest("div").id);
+            }
+            else {
+                window.components.displayMessage(target.closest("div").id, response);
+            }
+        });
+        return false;
+    }
+
+    sendRecoveryCode(target) {
+        const payload = JSON.stringify({"code" : parseInt(target.code.value)});
+        ApiRequest.apiRequest("post", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
+            if (stat == 200) {
+                window.components.passwordForm(target.closest("div").id);
+                sessionStorage.setItem("recovery-token", response);
+            }
+            else {
+                window.components.displayMessage(target.closest("div").id, response);
+            }
+        });
+        return false;
+    }
+
+    changePassword(target) {
+        const password1 = target.password1.value;
+        const password2 = target.password2.value;
+        const container = target.closest("div").id;
+        if (!this.checkPasswordMatch(password1, password2)) {
+            window.components.displayMessage(container, "Las contraseñas no coinciden.");
+        }
+        else {
+            const payload = JSON.stringify({
+                "token" : sessionStorage.getItem("recovery-token"),
+                "password" : password1
+            })
+            ApiRequest.apiRequest("put", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
+                if (stat == 200) {
+                    window.components.loginForm(container)
+                    window.components.displayMessage(container, response);
+                }
+                else {
+                    window.components.displayMessage(container, response);
+                }
+            });
+            sessionStorage.removeItem("recovery-token");
+        }
+        return false;
+    }
     ////////////////////////////
     /// Request data methods ///
     ////////////////////////////
@@ -148,43 +175,6 @@ export class CrudApp {
             this.products.push(newProduct);
         });
 
-    }
-
-    async apiRequest(method, route, header, content, responseFunction) {
-        try {
-            const response = await fetch(this.backendUrl + route, {
-                method: method,
-                headers: header,
-                body: content
-            });
-
-            if (!response.ok) {
-                return false;
-            }
-
-            if (responseFunction) {
-                try {
-                    const data = await response.json();
-                    
-                    responseFunction(data);
-                } catch (e) {
-                    responseFunction();
-                }
-                finally {
-                    return true;
-                }
-            } else {
-                return true;
-            }
-        } catch (error) {
-            if (error.message.includes("Failed to fetch")) {
-                alert("Server not responding.")
-            }
-            else {
-                console.log(error)
-            }
-            return false;
-        }
     }
 
     ///////////////
@@ -512,9 +502,9 @@ export class CrudApp {
                 alert("Hubo un error al agregar el producto.")
             }
             else {
-            const newProduct = new Product(data.id ,data.name, data.categoryId.name, data.imagePath);
-            this.addProductToList(newProduct);
-            this.reloadTable("product")
+                const newProduct = new Product(data.id ,data.name, data.categoryId.name, data.imagePath);
+                this.addProductToList(newProduct);
+                this.reloadTable("product")
             }
         });
 
@@ -527,8 +517,8 @@ export class CrudApp {
                 alert("Hubo un error al eliminar el producto.")
             }
             else {
-            this.deleteProductFromList(productId);
-            this.reloadTable("product");
+                this.deleteProductFromList(productId);
+                this.reloadTable("product");
             }
         });
         
@@ -561,9 +551,9 @@ export class CrudApp {
                 alert("Error al editar el producto.")
             }
             else {
-            const product = this.getProductById(data.id)[0];
-            product.fromJson(data);
-            this.reloadTable("product");
+                const product = this.getProductById(data.id)[0];
+                product.fromJson(data);
+                this.reloadTable("product");
             }
         });
 
@@ -586,9 +576,9 @@ export class CrudApp {
                 alert("Error al agregar la categoría.")
             }
             else {
-            const newCategory = new Category(data.id, data.name, data.description, data.imagePath);
-            this.addCategoryToList(newCategory);
-            this.reloadTable("category")
+                const newCategory = new Category(data.id, data.name, data.description, data.imagePath);
+                this.addCategoryToList(newCategory);
+                this.reloadTable("category")
             }
         });
 
@@ -624,9 +614,9 @@ export class CrudApp {
                 alert("Error al editar la categoría.");
             }
             else {
-            const category = this.getCategoryById(data.id)[0];
-            category.fromJson(data);
-            this.reloadTable("category");
+                const category = this.getCategoryById(data.id)[0];
+                category.fromJson(data);
+                this.reloadTable("category");
             }
         });
 

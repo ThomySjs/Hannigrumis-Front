@@ -4,5 +4,7 @@ window.env = {
     PRODUCT_ROUTE : "product/",
     IMAGE_ROUTE : "images/",
     LOGIN_ROUTE : "login",
-    CHECK_TOKEN_ROUTE : "valid-user"
+    CHECK_TOKEN_ROUTE : "valid-user",
+    RECOVERY_ROUTE : "reset-password",
+    CONTACT_EMAIL : ""
 }
