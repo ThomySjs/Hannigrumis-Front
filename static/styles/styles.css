@@ -12,6 +12,9 @@
     --contrast-color: #FF677D;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     width: 100%;

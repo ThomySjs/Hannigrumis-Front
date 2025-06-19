@@ -12,6 +12,9 @@
     --contrast-color: #FF677D;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
 h1 {
     font-family: 'Lobster', sans-serif;
@@ -290,6 +293,11 @@ p {
     cursor: pointer;
 }
 
+.editCategoryDescription {
+    width: 80%;
+    height: 65px;
+}
+
 @media (max-width: 850px) {
 
 
@@ -328,6 +336,15 @@ p {
         height: 100%;
         object-fit: scale-down;
         object-position: center;
+    }
+
+    .editCategoryName {
+        height: 2rem;
+        width: 50%;
+    }
+    .editCategoryDescription {
+        width: 50%;
+        height: 80px;
     }
 
 
