@@ -1,5 +1,6 @@
 import { Category } from "./model/Category.js";
 import { Product } from "./model/Product.js"
+import { ApiRequest } from "./ApiRequest.js";
 
 
 export class CrudApp {
@@ -25,7 +26,7 @@ export class CrudApp {
 
         await this.requestProductsAndCategories()
 
-        this.createProductButtons();
+        this.createSelectButtons();
         this.createAddProductForm();
         this.createProductList();
 
@@ -70,9 +71,12 @@ export class CrudApp {
             return false;
         }
 
-        const isValid = await this.apiRequest("get", this.checkTokenRoute, {'Authorization' : 'Bearer ' + token}, null, null);
-        
-        return isValid;
+        return await ApiRequest.apiRequest("get", this.checkTokenRoute, {'Authorization' : 'Bearer ' + token}, null, (stat, data) => {
+            if (stat == 200) {
+                return true;
+            }
+            return false;
+        });
     }
 
     async login(event, form) {
@@ -90,9 +94,20 @@ export class CrudApp {
             "password" : form.password.value
         })
 
-        const validUser = await this.apiRequest("post", this.loginRoute, {"Content-Type" : "application/json"}, payload, (data) => {
+        await ApiRequest.apiRequest("post", this.loginRoute, {"Content-Type" : "application/json"}, payload, (stat, data) => {
+            console.log(stat)
+            if (stat == 400) {
+                alert("Invalid credentials.")
+                form.reset();
+            }
+            else if (stat == 401) {
+                alert("Email not virified.")
+                form.reset();
+            }
+            else {
                 sessionStorage.setItem("AuthorizationToken", data["token"]);
                 window.location.href = "crud.html"
+            }
         });
 
         if (!validUser) {
@@ -116,18 +131,18 @@ export class CrudApp {
     async requestProductsAndCategories() {
         this.products = [];
         this.categories = [];
-        await this.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
-        await this.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
+        await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
+        await ApiRequest.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
     }
  
-    loadCategories(data) {
+    loadCategories(stat, data) {
         data.forEach((category) => {
             const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
             this.categories.push(newCategory);
         });
     }
 
-    loadProducts(data) {
+    loadProducts(stat, data) {
         data.forEach((product) => {
             const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
             this.products.push(newProduct);
@@ -241,7 +256,7 @@ export class CrudApp {
         container.style.display = "none";
     }
 
-    createProductButtons() {
+    createSelectButtons() {
         const container = document.getElementById("formButtons");
         const elements = `
             <select id="crudSelection">
@@ -249,9 +264,25 @@ export class CrudApp {
                 <option value="category">Categorias</option>
             </select>
             <button id="addButton" onclick="app.showForm()"><i class="fa-solid fa-plus" style="color: #fef3f1;"></i></button>
-        `
-
+        `;
         container.innerHTML = elements;
+        document.getElementById("crudSelection").addEventListener("change", (event) => {
+            const button = document.getElementById("addButton")
+            if (event.target.value === "product") {
+                button.addEventListener("click", (e) => {
+                    this.createAddProductForm();
+                    this.showForm();
+                });
+                this.reloadTable(event.target.value)
+            }
+            if (event.target.value === "category") {
+                button.addEventListener("click", (e) => {
+                    this.createAddCategoryForm();
+                    this.showForm();
+                });
+                this.reloadTable(event.target.value);
+            }
+        });
     }
 
     createAddProductForm() {
@@ -270,7 +301,7 @@ export class CrudApp {
         let form = `
             <h2>Agregar producto</h2>
             <button id="closeButton" onclick="app.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
-            <form id="addForm" class="crudForm">
+            <form id="addForm" class="crudForm" onsubmit="return app.createProduct(this)">
                 <label>
                     Nombre
                 </label>
@@ -289,11 +320,6 @@ export class CrudApp {
         container.innerHTML = form;
         const categorySelector = document.getElementById("categorySelector");
         categorySelector.insertAdjacentElement("afterend", selection);
-
-        document.getElementById("addForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            this.createProduct(event.target);
-        });
     }
 
     createProductList() {
@@ -381,7 +407,7 @@ export class CrudApp {
         let form = `
             <h2>Agregar categoría</h2>
             <button id="closeButton" onclick="app.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
-            <form id="addForm" class="crudForm" method="post" enctype="multipart/form-data">
+            <form id="addForm" onsubmit="return app.createCategory(this)" class="crudForm">
                 <label>
                     Nombre
                 </label>
@@ -399,11 +425,6 @@ export class CrudApp {
         `;
 
         container.innerHTML = form;
-
-        document.getElementById("addForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            this.createCategory(event.target);
-        });
     }
 
     createCategoryList() {
@@ -455,7 +476,7 @@ export class CrudApp {
         const tableRow =`
             <td>${categoryId}</td>
             <td><input type="text" class="editCategoryName"  value="${categoryName}"></td>
-            <td><input type="text" class="editCategoryDescription" value="${categoryDescription}"></td>
+            <td><textarea class="editCategoryDescription" >${categoryDescription}</textarea></td>
             <td><input type="file" class="editCategoryImage"/></td>
             <td id="actionButtons"> 
                 <button type="button" id="sendEdit" onclick="app.editCategory(this, ${categoryId}, event)">
@@ -472,7 +493,7 @@ export class CrudApp {
     }
     
     ////////////////////////////
-    //* CRUD functionalities *//
+    /// CRUD functionalities ///
     ////////////////////////////
 
     async createProduct(form) {
@@ -485,25 +506,30 @@ export class CrudApp {
             return false;
         }
 
-        const requestCompleted = await this.apiRequest("post", this.productRoute + "add", this.getAuthHeader(), newForm, (data) => {
+        await ApiRequest.apiRequest("post", this.productRoute + "add", this.getAuthHeader(), newForm, (stat, data) => {
             form.reset();
+            if (stat != 200) {
+                alert("Hubo un error al agregar el producto.")
+            }
+            else {
             const newProduct = new Product(data.id ,data.name, data.categoryId.name, data.imagePath);
             this.addProductToList(newProduct);
             this.reloadTable("product")
+            }
         });
-
-        if (!requestCompleted) {
-            alert("Hubo un error al agregar el producto.")
-            form.reset()
-        }
 
         return false;
     }
 
     async deleteProduct(productId) {
-        const requestCompleted = await this.apiRequest("delete", this.productRoute + "delete/" + productId, this.getAuthHeader(), null, ()  => {
+        await ApiRequest.apiRequest("delete", this.productRoute + "delete/" + productId, this.getAuthHeader(), null, (stat, data)  => {
+            if (stat != 200) {
+                alert("Hubo un error al eliminar el producto.")
+            }
+            else {
             this.deleteProductFromList(productId);
             this.reloadTable("product");
+            }
         });
         
         if (!requestCompleted) {
@@ -530,10 +556,15 @@ export class CrudApp {
             form.append("file", image);
         }
 
-        await this.apiRequest("put", this.productRoute  + "edit", this.getAuthHeader(), form, (data) => {
+        await ApiRequest.apiRequest("put", this.productRoute  + "edit", this.getAuthHeader(), form, (stat, data) => {
+            if (stat != 200) {
+                alert("Error al editar el producto.")
+            }
+            else {
             const product = this.getProductById(data.id)[0];
             product.fromJson(data);
             this.reloadTable("product");
+            }
         });
 
     }
@@ -549,21 +580,26 @@ export class CrudApp {
             return false;
         }
 
-        await this.apiRequest("post", this.categoryRoute + "add", this.getAuthHeader(), newForm, (data) => {
+        await ApiRequest.apiRequest("post", this.categoryRoute + "add", this.getAuthHeader(), newForm, (stat, data) => {
             form.reset();
+            if (stat != 200) {
+                alert("Error al agregar la categoría.")
+            }
+            else {
             const newCategory = new Category(data.id, data.name, data.description, data.imagePath);
             this.addCategoryToList(newCategory);
             this.reloadTable("category")
+            }
         });
+
+        return false;
     }
 
     async deleteCategory(categoryId) {
-
-        await this.apiRequest("delete", this.categoryRoute + "delete/" + categoryId, this.getAuthHeader(), null, async ()  => {
+        await ApiRequest.apiRequest("delete", this.categoryRoute + "delete/" + categoryId, this.getAuthHeader(), null, async (stat, data)  => {
             await this.requestProductsAndCategories();
             this.reloadTable("category");
         });
-
     }
 
     async editCategory(button, categoryId, event) {
@@ -583,15 +619,16 @@ export class CrudApp {
             form.append("file", image);
         }
 
-        const requestCompleted = await this.apiRequest("put", this.categoryRoute + "edit", this.getAuthHeader(), form, (data) => {
+        await ApiRequest.apiRequest("put", this.categoryRoute + "edit", this.getAuthHeader(), form, (stat, data) => {
+            if (stat != 200) {
+                alert("Error al editar la categoría.");
+            }
+            else {
             const category = this.getCategoryById(data.id)[0];
             category.fromJson(data);
             this.reloadTable("category");
+            }
         });
-
-        if (!requestCompleted) {
-            alert("Hubo un error al editar la categoria.")
-        }
 
         return false;
     }
@@ -610,4 +647,5 @@ export class CrudApp {
             userButtons.style.display = "none";
         }
     }
+
 }

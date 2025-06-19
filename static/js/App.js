@@ -1,5 +1,6 @@
 import { Category } from "./model/Category.js";
 import { Product } from "./model/Product.js"
+import { ApiRequest } from "./ApiRequest.js";
 
 
 export class App {
@@ -24,58 +25,23 @@ export class App {
     async requestProductsAndCategories() {
         this.products = [];
         this.categories = [];
-        await this.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
-        await this.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
+        await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
+        await ApiRequest.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
     }
  
-    loadCategories(data) {
+    loadCategories(stat, data) {
         data.forEach((category) => {
             const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
             this.categories.push(newCategory);
         });
     }
 
-    loadProducts(data) {
+    loadProducts(stat, data) {
         data.forEach((product) => {
             const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
             this.products.push(newProduct);
         });
 
-    }
-
-    async apiRequest(method, route, header, content, responseFunction) {
-        try {
-            const response = await fetch(this.backendUrl + route, {
-                method: method,
-                headers: header,
-                body: content
-            });
-
-            if (!response.ok) {
-                return false;
-            }
-
-            if (responseFunction) {
-                try {
-                    const data = await response.json();
-                    
-                    responseFunction(data);
-                } catch (e) {
-                    responseFunction();
-                }
-                finally {
-                    return true;
-                }
-            } else {
-                return true;
-            }
-        } catch (error) { 
-            return false;
-        }
-    }
-
-    addProduct(product) {
-        this._products.push(product)
     }
 
     getProducts() {
@@ -84,10 +50,6 @@ export class App {
 
     getProductsByCategory(categoryName) {
         return this.products.filter((product) => product.getCategory() === categoryName);
-    }
-
-    addCategory(category) {
-        this._categories.push(category);
     }
 
     getCategories() {
