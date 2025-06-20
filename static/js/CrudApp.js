@@ -291,7 +291,7 @@ export class CrudApp {
         let form = `
             <h2>Agregar producto</h2>
             <button id="closeButton" onclick="app.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
-            <form id="addForm" class="crudForm" onsubmit="return app.createProduct(this)">
+            <form id="addForm" class="crudForm" onsubmit="return app.createProduct(this, event)">
                 <label>
                     Nombre
                 </label>
@@ -397,7 +397,7 @@ export class CrudApp {
         let form = `
             <h2>Agregar categoría</h2>
             <button id="closeButton" onclick="app.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
-            <form id="addForm" onsubmit="return app.createCategory(this)" class="crudForm">
+            <form id="addForm" onsubmit="return app.createCategory(this, event)" class="crudForm">
                 <label>
                     Nombre
                 </label>
@@ -486,7 +486,8 @@ export class CrudApp {
     /// CRUD functionalities ///
     ////////////////////////////
 
-    async createProduct(form) {
+    async createProduct(form, event) {
+        event.preventDefault();
         const newForm = new FormData(form);
 
         if (form.name.value.trim() == "") {
@@ -560,7 +561,8 @@ export class CrudApp {
     }
 
 
-    async createCategory(form) {
+    async createCategory(form, event) {
+        event.preventDefault();
         const newForm = new FormData(form)
 
         if (form.name.value.trim() == "") {
