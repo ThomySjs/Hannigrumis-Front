@@ -28,7 +28,41 @@ export class Login {
             return false;
         });
     }
+    
+    static getPayloadFromToken() {
+        const payload = this.getAuthToken().split(".")[1];
+        return JSON.parse(atob(payload));
+    }
 
+    static isAdmin() {
+        const role = this.getPayloadFromToken().role;
+        return role === "ADMIN"
+    }
+
+    static async register(form, event) {
+        event.preventDefault();
+        const payload = JSON.stringify({
+            name : form.name.value,
+            email : form.email.value,
+            password : form.password.value
+        });
+
+        let header = this.getAuthHeader();
+        header["Content-Type"] = "application/json"
+
+        await ApiRequest.apiRequest("post", this.registerRoute, header, payload, (stat, response) => {
+            let message;
+            if (stat != 200) {
+                message = response;
+            }
+            else {
+                message = "Usuario creado correctamente.";
+            }
+            form.reset();
+            components.displayMessage("userForm", message);
+        })
+        return false;
+    }
 
     static async login(event, form) {
         event.preventDefault()

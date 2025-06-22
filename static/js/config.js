@@ -6,5 +6,6 @@ window.env = {
     LOGIN_ROUTE : "login",
     CHECK_TOKEN_ROUTE : "valid-user",
     RECOVERY_ROUTE : "reset-password",
-    CONTACT_EMAIL : ""
+    CONTACT_EMAIL : "",
+    REGISTER_ROUTE : "register"
 }

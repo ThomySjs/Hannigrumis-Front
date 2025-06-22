@@ -322,6 +322,43 @@ export class CrudComponents {
         rowElement.classList.add("editingField");
     }
 
+    registerUserForm() {
+        const container = document.getElementById("formContainer");
+        let form = `
+            <h2>Registrar usuario</h2>
+            <button id="closeButton" onclick="components.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
+            <form id="userForm" class="crudForm" onsubmit="return Login.register(this, event)">
+                <label>
+                    Nombre
+                </label>
+                <input type="text" name="name" required/>
+                <label>
+                    Correo
+                </label>
+                <input type="email" name="email" required/>
+                <label>
+                    Contraseña
+                </label>
+                <input type="password" name="password" required/>
+                <input type="submit"/>
+            </form>           
+        `;
+        container.innerHTML = form;
+        this.showForm();
+    }
+
+    showRegisterUserButton() {
+        const container  = document.getElementById("userButtons");
+        const button = document.createElement("a");
+        button.innerHTML = '<i class="fa-solid fa-user-plus" style="color: #FF677D; font-size: 2rem;"></i>'
+        button.addEventListener("click", () => {
+            this.showUserButtons();
+            this.registerUserForm();
+        })
+
+        container.insertAdjacentElement("afterbegin", button);
+    }
+
     showUserButtons() {
         const userButtons = document.getElementById("userButtons");
 
