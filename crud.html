@@ -46,8 +46,8 @@
                 <i class="fa-solid fa-cat" style="color: #FFB5A7; font-size:2.5rem;"></i>
             </a>
         </div>
-        <div id="userButtons">
-            <a onclick="app.logout()">
+        <div id="userButtons" style="display: none;">
+            <a onclick="Login.logout()">
                 <i class="fa-solid fa-right-from-bracket" style="color: #FF677D; font-size: 2rem;"></i>
             </a>
         </div>
@@ -60,6 +60,7 @@
         <div id="listContainer">
         </div>
     </section>
+    <div id="overlay"></div>
     <script src="./static/js/config.js" type="module"></script>
     <script src="./static/js/crud.js" type="module"></script>
 </body>
