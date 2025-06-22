@@ -4,67 +4,38 @@ import { ApiRequest } from "./ApiRequest.js";
 
 
 export class App {
-    constructor() {
-        this.backendUrl = window.env.API_URL;
-        this.categoryRoute = window.env.CATEGORY_ROUTE;
-        this.imageRoute = window.env.IMAGE_ROUTE;
-        this.productRoute = window.env.PRODUCT_ROUTE;
-    }
-
+    backendUrl = window.env.API_URL;
+    categoryRoute = window.env.CATEGORY_ROUTE;
+    imageRoute = window.env.IMAGE_ROUTE;
+    productRoute = window.env.PRODUCT_ROUTE;
+    
     async init() {
-        
-        await this.requestProductsAndCategories();
+        await this.loadCategories();
+        await this.loadProducts();
         this.createCategoryCards();
-
     }
-
-    ////////////////////////////
-    /// Request data methods ///
-    ////////////////////////////
-
-    async requestProductsAndCategories() {
-        this.products = [];
-        this.categories = [];
-        await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, this.loadCategories.bind(this));
-        await ApiRequest.apiRequest("get", this.productRoute + "all", {}, null, this.loadProducts.bind(this));
-    }
- 
-    loadCategories(stat, data) {
-        data.forEach((category) => {
+        
+    async loadCategories() {
+        this.categories = []
+        await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, (stat, data) => {
+            data.forEach((category) => {
             const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
             this.categories.push(newCategory);
-        });
+        })});
     }
 
-    loadProducts(stat, data) {
-        data.forEach((product) => {
+    async loadProducts() {
+        this.products = [];
+        await ApiRequest.apiRequest("get", this.productRoute + "all", {}, null, (stat, data) => {
+            data.forEach((product) => {
             const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
             this.products.push(newProduct);
-        });
-
-    }
-
-    getProducts() {
-        return this._products;
+        })});
     }
 
     getProductsByCategory(categoryName) {
         return this.products.filter((product) => product.getCategory() === categoryName);
     }
-
-    getCategories() {
-        return this._categories;
-    }
-
-    getCategoryByName(categoryName) {
-        this._categories.filter((category) => {
-            return category.getName() === categoryName;
-        })
-    }
-
-    //////////////////
-    /// Components ///
-    //////////////////
 
     createCategoryCards() {
         const container = document.getElementById("cards-container");
