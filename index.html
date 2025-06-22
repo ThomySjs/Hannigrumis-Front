@@ -95,7 +95,7 @@
         </div>
     </section>
 
-    <a href="https://wa.me/3487683753" id="whatsapp-button" target="_blank">
+    <a id="whatsapp-button" target="_blank">
         <i class="fa-brands fa-square-whatsapp" id="whatsapp-logo"></i>
     </a>
     
@@ -113,6 +113,7 @@
     <script src="./static/js/config.js"></script>
     <script src="./static/js/index.js" type="module"></script>
     <script>
+        document.getElementById("whatsapp-button").href = "https://wa.me/" + window.env.WHATSAPP;
         document.getElementById("contact-form").action = "https://formsubmit.co/" + window.env.CONTACT_EMAIL;
     </script>
 </body>

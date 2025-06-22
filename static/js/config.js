@@ -7,5 +7,6 @@ window.env = {
     CHECK_TOKEN_ROUTE : "valid-user",
     RECOVERY_ROUTE : "reset-password",
     CONTACT_EMAIL : "",
+    WHATSAPP : "",
     REGISTER_ROUTE : "register"
 }
