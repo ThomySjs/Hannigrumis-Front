@@ -1,12 +1,13 @@
-export class loginComponents {
-    constructor () {
+export class LoginComponents {
+    init() {
+        this.loginForm("form-container");
     }
 
     loginForm(containerId) {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form" onsubmit="app.login(event, this)">
+            <form class="form" onsubmit="return Login.login(event, this)">
                 <label>
                     Correo
                 </label>
@@ -26,7 +27,7 @@ export class loginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return app.getRecoveryCode(this)">
+            <form class="form recovery" onsubmit="return Login.getRecoveryCode(this)">
                 <label>
                     Correo
                 </label>
@@ -41,7 +42,7 @@ export class loginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return app.sendRecoveryCode(this)">
+            <form class="form recovery" onsubmit="return Login.sendRecoveryCode(this)">
                 <label>
                     Código
                 </label>
@@ -56,7 +57,7 @@ export class loginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return app.changePassword(this)">
+            <form class="form recovery" onsubmit="return Login.changePassword(this)">
                 <label>
                     Contraseña
                 </label>
