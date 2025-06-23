@@ -19,18 +19,18 @@ export class CrudComponents {
         }
     }
      
-    async loadCategories() {
+    async loadCategories(order = "id") {
         this.categories = []
-        await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, (stat, data) => {
+        await ApiRequest.apiRequest("get", this.categoryRoute + "all?order=" + order, {},  null, (stat, data) => {
             data.forEach((category) => {
             const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
             this.categories.push(newCategory);
         })});
     }
 
-    async loadProducts() {
+    async loadProducts(order = "id") {
         this.products = [];
-        await ApiRequest.apiRequest("get", this.productRoute + "all", {}, null, (stat, data) => {
+        await ApiRequest.apiRequest("get", this.productRoute + "all?order=" + order, {}, null, (stat, data) => {
             data.forEach((product) => {
             const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
             this.products.push(newProduct);
@@ -41,15 +41,15 @@ export class CrudComponents {
        return this.categories.filter((category) => category.getName() == categoryName)
     }
 
-    async reloadTable(type) {
+    async reloadTable(type, order = "id") {
         const container = document.getElementById("listContainer");
-        container.innerHTML = null;
-        await this.loadCategories();
-        await this.loadProducts();
+        container.innerHTML = "";
         if (type === "product") {
+            await this.loadProducts(order);
             this.createProductList();
         }
         if (type === "category") {
+            await this.loadCategories(order);
             this.createCategoryList();
         }
     }
@@ -75,14 +75,21 @@ export class CrudComponents {
                 <option value="product" selected>Productos</option>
                 <option value="category">Categorias</option>
             </select>
-            <button id="addButton" onclick="components.showForm()"><i class="fa-solid fa-plus" style="color: #fef3f1;"></i></button>
+            <div class="crud-buttons">
+                <button id="sortButton" onclick="components.mobileSortOptions('product')"><i class="fa-solid fa-arrow-up-z-a"></i></button>
+                <button id="addButton" ><i class="fa-solid fa-plus"></i></button>
+            </div>
         `;
         container.innerHTML = elements;
+
         const button = document.getElementById("addButton")
-        button.addEventListener("click", () => {
+        const sortButton = document.getElementById("sortButton");
+
+        button.addEventListener("click", (e) => {
             this.createAddProductForm();
             this.showForm();
-        })
+        });
+
         document.getElementById("crudSelection").addEventListener("change", (event) => {
             if (event.target.value === "product") {
                 button.addEventListener("click", (e) => {
@@ -98,6 +105,9 @@ export class CrudComponents {
                 });
                 this.reloadTable(event.target.value);
             }
+            sortButton.addEventListener("click", () => {
+                this.mobileSortOptions(event.target.value);
+            })
         });
     }
 
@@ -146,9 +156,9 @@ export class CrudComponents {
         table.id = "list"
         const tableHeaders = `
             <tr id="headers">
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
+                <th><a class="sort" onclick="components.reloadTable('product','id')">ID</a></th>
+                <th><a class="sort" onclick="components.reloadTable('product','name')">Nombre</a></th>
+                <th><a class="sort" onclick="components.reloadTable('product','category')">Categoría</a></th>
                 <th style="text-align:center;">Foto</th>
                 <th style="text-align:center;">Acción</th>
             </tr>
@@ -176,6 +186,7 @@ export class CrudComponents {
 
         table.appendChild(tableBody);
 
+        container.innerHTML = "";
         container.appendChild(table);
     }
 
@@ -258,9 +269,9 @@ export class CrudComponents {
         table.id = "list"
         const tableHeaders = `
             <tr id="headers">
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
+                <th><a class="sort" onclick="components.reloadTable('category','id')">ID</a></th>
+                <th><a class="sort" onclick="components.reloadTable('category','name')">Nombre</a></th>
+                <th><a class="sort" onclick="components.reloadTable('category','description')">Descripción</a></th>
                 <th style="text-align:center;">Foto</th>
                 <th style="text-align:center;">Acción</th>
             </tr>
@@ -345,6 +356,36 @@ export class CrudComponents {
         `;
         container.innerHTML = form;
         this.showForm();
+    }
+
+    mobileSortOptions(type) {
+        const container = document.getElementById("formContainer");
+        let options;
+        if (type === "product") {
+            options = `
+                <div class="sort-options-container">
+                    <a onclick="components.reloadTable('${type}', 'id')">ID</a>
+                    <a onclick="components.reloadTable('${type}', 'name')">Nombre</a>
+                    <a onclick="components.reloadTable('${type}', 'category')">Categoría</a>
+                </div>
+            `;
+        }
+        else if (type === "category") {
+            options = `
+                <div class="sort-options-container">
+                    <a onclick="components.reloadTable('${type}', 'id')">ID</a>
+                    <a onclick="components.reloadTable('${type}', 'name')">Nombre</a>
+                    <a onclick="components.reloadTable('${type}', 'description')">Descripción</a>
+                </div>
+            `;
+        }
+        container.innerHTML = options;
+        this.showForm();
+    }
+
+    async changeProductOrder(order) {
+        await this.loadProducts(order);
+        this.createAddProductForm();
     }
 
     showRegisterUserButton() {

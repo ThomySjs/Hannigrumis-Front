@@ -9,6 +9,7 @@
     --navbar-color: #F8EDEB;
     --light-color: #fff8f7;
     --mid-color: #FFB5A7;
+    --mid-color-hoover: #f59384;
     --contrast-color: #FF677D;
 }
 
@@ -50,6 +51,7 @@ p {
 
 #navbar {
     height:65px;
+    min-width: 350px;
     background-color: #F8EDEB;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     display: flex;
@@ -95,6 +97,7 @@ p {
 #crud {
     padding: 1rem;
     width: 100%;
+    min-width: 350px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -106,6 +109,7 @@ p {
 #formContainer {
     display: none;
     position: fixed;
+    min-width: 350px;
     background-color: #fef3f1;
     padding: 1.5rem;
     top: 50%;
@@ -179,6 +183,11 @@ p {
     padding-bottom: 2rem;
 }
 
+.crud-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 #listContainer {
     width: 100%;
     max-height: 100%;
@@ -248,6 +257,19 @@ p {
     height: 5rem;
     border-radius: 20px;
 }
+
+.sort {
+    cursor: pointer;
+}
+
+.sort-options-container {
+    display: none;
+}
+
+#sortButton {
+    display: none;
+}
+
 
 #headers {
     background-color: #FFB5A7;
@@ -322,16 +344,17 @@ p {
     cursor: pointer;
 }
 
-#addButton {
+#addButton, #sortButton {
     background-color: #FF677D;
     border: none;
     padding: 1rem;
     cursor: pointer;
 }
 
-#addButton i {
+#addButton i, #sortButton i {
     font-size: 1.5rem;
     font-weight: 700;
+    color: #fef3f1;
 }
 
 #sendEdit {
@@ -362,6 +385,7 @@ p {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     display: none;
+    min-width: 350px;
 }
 
 .editCategoryDescription {
@@ -417,5 +441,30 @@ p {
         height: 80px;
     }
 
+    .sort-options-container {
+        width: 70%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2rem 0;
+    }
+
+    .sort-options-container a {
+        font-size: 1.5rem;
+        background-color: var(--mid-color);
+        border: 1px solid var(--contrast-color);
+        border-radius: 0.5rem;
+        color: var(--light-color);
+    }
+
+    .sort-options-container a:hover {
+        background-color: var(--mid-color-hoover);
+        transition: 0.5s;
+    }
+
+    #sortButton {
+        display: block;
+    }
 
 }

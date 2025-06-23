@@ -63,5 +63,10 @@
     <div id="overlay"></div>
     <script src="./static/js/config.js" type="module"></script>
     <script src="./static/js/crud.js" type="module"></script>
+    <script>
+        document.getElementById("overlay").addEventListener("click", () => {
+            components.closeForm();
+        })
+    </script>
 </body>
 </html>
