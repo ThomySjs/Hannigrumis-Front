@@ -215,7 +215,7 @@ export class CrudComponents {
             <td id="categorySelectorEdit"></td>
             <td class="upload-td">
                 <label class="custom-upload-button">
-                    <input type="file" name="file"/>
+                    <input type="file" name="file" class="editProductImage"/>
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     Subir imagen
                 </label>
@@ -314,7 +314,7 @@ export class CrudComponents {
             <td><textarea class="editCategoryDescription" >${categoryDescription}</textarea></td>
             <td class="upload-td">
                 <label class="custom-upload-button">
-                    <input type="file" name="file"/>
+                    <input type="file" name="file" class="editCategoryImage"/>
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     Subir imagen
                 </label>
