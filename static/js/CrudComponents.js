@@ -383,6 +383,32 @@ export class CrudComponents {
         this.showForm();
     }
 
+    showPasswordForm() {
+        const container = document.getElementById("formContainer");
+        const profile = `
+            <button id="closeButton" onclick="components.closeForm()"><i class="fa-solid fa-circle-xmark" style="color: #FF677D;"></i></button>
+            <form class="crudForm" onsubmit="return Login.changePassword(this, event)">
+                <label>
+                    Contraseña actual
+                </label>
+                <input type="password" name="oldPassword"/>
+                <label>
+                    Contraseña nueva
+                </label>
+                <input type="password" name="newPassword"/>
+                <input type="submit" value="Actualizar contraseña"/>
+            </form>
+        `;
+
+        container.innerHTML = profile;
+        this.showForm();
+    }
+
+
+    /////////////////////
+    // Functionalities //
+    /////////////////////
+
     async changeProductOrder(order) {
         await this.loadProducts(order);
         this.createAddProductForm();

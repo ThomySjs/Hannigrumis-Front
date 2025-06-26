@@ -57,7 +57,7 @@ export class LoginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return Login.changePassword(this)">
+            <form class="form recovery" onsubmit="return Login.recoverPassword(this)">
                 <label>
                     Contraseña
                 </label>

@@ -47,6 +47,12 @@
             </a>
         </div>
         <div id="userButtons" style="display: none;">
+            <a id="password-change-button">
+                <i class="fa-solid fa-key user-option"></i>
+                <label>
+                    Cambiar contraseña
+                </label>
+            </a>
             <a onclick="Login.logout()">
                 <i class="fa-solid fa-right-from-bracket" style="color: #FF677D; font-size: 2rem;"></i>
             </a>
@@ -66,6 +72,10 @@
     <script>
         document.getElementById("overlay").addEventListener("click", () => {
             components.closeForm();
+        })
+        document.getElementById("password-change-button").addEventListener("click", () => {
+            components.showPasswordForm();
+            components.showUserButtons();
         })
     </script>
 </body>
