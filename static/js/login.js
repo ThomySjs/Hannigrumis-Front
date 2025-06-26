@@ -5,15 +5,16 @@ export class Login {
     static loginRoute = window.env.LOGIN_ROUTE;
     static passwordRecoveryRoute = window.env.RECOVERY_ROUTE;
     static registerRoute = window.env.REGISTER_ROUTE;
+    static passwordChangeRoute = window.env.CHANGE_PASSWORD_ROUTE;
 
     static getAuthToken() {
         return sessionStorage.getItem("AuthorizationToken");
     }
-    
+
     static getAuthHeader() {
         return {'Authorization' : 'Bearer ' + this.getAuthToken()}
     }
-    
+
     static async checkAuthorization() {
         const token = this.getAuthToken();
 
@@ -28,7 +29,7 @@ export class Login {
             return false;
         });
     }
-    
+
     static getPayloadFromToken() {
         const payload = this.getAuthToken().split(".")[1];
         return JSON.parse(atob(payload));
@@ -96,7 +97,7 @@ export class Login {
         });
         return false;
     }
-    
+
     static logout() {
         sessionStorage.removeItem("AuthorizationToken");
 
@@ -133,7 +134,7 @@ export class Login {
         return false;
     }
 
-    static changePassword(target) {
+    static recoverPassword(target) {
         const password1 = target.password1.value;
         const password2 = target.password2.value;
         const container = target.closest("div").id;
@@ -155,6 +156,31 @@ export class Login {
                 }
             });
             sessionStorage.removeItem("recovery-token");
+        }
+        return false;
+    }
+
+    static changePassword(target, event) {
+        event.preventDefault()
+        const oldPassword = target.oldPassword.value;
+        const newPassword = target.newPassword.value;
+        const container = target.closest("div").id;
+        if (oldPassword === newPassword) {
+            components.displayMessage(container, "Las contraseñas no pueden ser iguales.");
+        }
+        else {
+            const payload = JSON.stringify({
+                oldPassword : oldPassword,
+                newPassword : newPassword
+            })
+
+            let headers = this.getAuthHeader();
+            headers["Content-Type"] = "application/json"
+
+            ApiRequest.apiRequest("put", this.passwordChangeRoute, headers, payload, (stat, response) => {
+                alert(response);
+                components.closeForm();
+            })
         }
         return false;
     }
