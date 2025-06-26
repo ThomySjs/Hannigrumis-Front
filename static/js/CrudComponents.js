@@ -18,7 +18,7 @@ export class CrudComponents {
             this.showRegisterUserButton();
         }
     }
-     
+
     async loadCategories(order = "id") {
         this.categories = []
         await ApiRequest.apiRequest("get", this.categoryRoute + "all?order=" + order, {},  null, (stat, data) => {
@@ -36,7 +36,7 @@ export class CrudComponents {
             this.products.push(newProduct);
         })});
     }
-    
+
     getCategoryByName(categoryName) {
        return this.categories.filter((category) => category.getName() == categoryName)
     }
@@ -352,7 +352,7 @@ export class CrudComponents {
                 </label>
                 <input type="password" name="password" required/>
                 <input type="submit"/>
-            </form>           
+            </form>
         `;
         container.innerHTML = form;
         this.showForm();
@@ -417,7 +417,12 @@ export class CrudComponents {
     showRegisterUserButton() {
         const container  = document.getElementById("userButtons");
         const button = document.createElement("a");
-        button.innerHTML = '<i class="fa-solid fa-user-plus" style="color: #FF677D; font-size: 2rem;"></i>'
+        button.innerHTML = `
+            <i class="fa-solid fa-user-plus user-option"></i>
+            <label>
+                Registrar usuario
+            </label>
+        `
         button.addEventListener("click", () => {
             this.showUserButtons();
             this.registerUserForm();
@@ -439,10 +444,15 @@ export class CrudComponents {
 
     displayMessage(target, message) {
         let form = document.getElementById(target);
-
-        let messageHTML = `
-            <h4 style="color: #FF677D;">${message}</h4>
-        `;
-        form.insertAdjacentHTML("afterbegin", messageHTML);
+        let existingMessage = document.getElementById("message");
+        if (!existingMessage) {
+            let messageHTML = `
+            <h4 id="message" style="color: #FF677D;">${message}</h4>
+            `;
+            form.insertAdjacentHTML("afterbegin", messageHTML);
+        }
+        else {
+            existingMessage.innerText = message;
+        }
     }
 }

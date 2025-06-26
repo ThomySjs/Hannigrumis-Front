@@ -50,17 +50,21 @@ p {
 /* header */
 
 #navbar {
-    height:65px;
+    height:75px;
     min-width: 350px;
     background-color: #F8EDEB;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
-    padding: 0 1.5rem;
+    padding: 5px 1.5rem;
     top: 0;
     left: 0;
     position: sticky;
     z-index: 999;
+}
+
+#svg-container {
+    height: 60px;
 }
 
 #navbar svg {
@@ -70,6 +74,7 @@ p {
 
 #mainButtons {
     width: 100%;
+    min-height: 65px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -79,16 +84,37 @@ p {
 #userButtons {
     display: none;
     flex-direction: column;
-    width: 150px;
+    padding-top: 5px;
+    max-width: 200px;
     background-color: var(--navbar-color);
     text-align: center;
     align-self: flex-end;
-    gap: 10px;
 }
 
+
 #userButtons a {
-    padding: 0.5rem 0;
+    padding: 0.7rem;
     cursor: pointer;
+    color: var(--contrast-color);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--contrast-color);
+}
+
+#userButtons a label{
+    width: 100%;
+    cursor: pointer;
+}
+
+.user-option {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+}
+
+#userButtons a:hover {
+    background-color: var(--mid-color);
+    color: var(--light-color);
 }
 
 
