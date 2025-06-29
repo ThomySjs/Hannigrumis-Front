@@ -6,6 +6,8 @@ export class Login {
     static passwordRecoveryRoute = window.env.RECOVERY_ROUTE;
     static registerRoute = window.env.REGISTER_ROUTE;
     static passwordChangeRoute = window.env.CHANGE_PASSWORD_ROUTE;
+    static editUserRoute = window.env.EDIT_USER_ROUTE;
+    static deleteUserRoute = window.env.DELETE_USER_ROUTE;
 
     static getAuthToken() {
         return sessionStorage.getItem("AuthorizationToken");
@@ -51,13 +53,14 @@ export class Login {
         let header = this.getAuthHeader();
         header["Content-Type"] = "application/json"
 
-        await ApiRequest.apiRequest("post", this.registerRoute, header, payload, (stat, response) => {
+        await ApiRequest.apiRequest("post", this.registerRoute, header, payload, async (stat, response) => {
             let message;
             if (stat != 200) {
                 message = response;
             }
             else {
                 message = "Usuario creado correctamente.";
+                await components.reloadTable("user");
             }
             form.reset();
             components.displayMessage("userForm", message);
@@ -79,15 +82,15 @@ export class Login {
             "email" : form.email.value,
             "password" : form.password.value
         })
-
+        const container = form.closest("div").id;
         await ApiRequest.apiRequest("post", this.loginRoute, {"Content-Type" : "application/json"}, payload, (stat, data) => {
             console.log(stat)
             if (stat == 400) {
-                alert("Usuario o contraseña incorrectos.")
+                components.displayMessage(container, "Usuario o contraseña incorrectos.");
                 form.reset();
             }
             else if (stat == 401) {
-                alert("El email no está verificado.")
+                components.displayMessage(container, "El email no está verificado.");
                 form.reset();
             }
             else {
@@ -108,8 +111,9 @@ export class Login {
         return password1 == password2;
     }
 
-    static getRecoveryCode(target) {
-        ApiRequest.apiRequest("get", this.passwordRecoveryRoute + "?email=" + target.email.value, {}, null, (stat, response) => {
+    static async getRecoveryCode(target, event) {
+        event.preventDefault();
+        await ApiRequest.apiRequest("get", this.passwordRecoveryRoute + "?email=" + target.email.value, {}, null, (stat, response) => {
             if (stat == 200) {
                 window.components.recoveryCodeForm(target.closest("div").id);
             }
@@ -120,9 +124,10 @@ export class Login {
         return false;
     }
 
-    static sendRecoveryCode(target) {
+    static async sendRecoveryCode(target, event) {
+        event.preventDefault();
         const payload = JSON.stringify({"code" : parseInt(target.code.value)});
-        ApiRequest.apiRequest("post", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
+        await ApiRequest.apiRequest("post", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
             if (stat == 200) {
                 window.components.passwordForm(target.closest("div").id);
                 sessionStorage.setItem("recovery-token", response);
@@ -134,7 +139,8 @@ export class Login {
         return false;
     }
 
-    static recoverPassword(target) {
+    static async recoverPassword(target, event) {
+        event.preventDefault();
         const password1 = target.password1.value;
         const password2 = target.password2.value;
         const container = target.closest("div").id;
@@ -146,7 +152,7 @@ export class Login {
                 "token" : sessionStorage.getItem("recovery-token"),
                 "password" : password1
             })
-            ApiRequest.apiRequest("put", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
+            await ApiRequest.apiRequest("put", this.passwordRecoveryRoute, {"Content-Type" : "application/json"}, payload, (stat, response) => {
                 if (stat == 200) {
                     window.components.loginForm(container)
                     window.components.displayMessage(container, response);
@@ -160,7 +166,7 @@ export class Login {
         return false;
     }
 
-    static changePassword(target, event) {
+    static async changePassword(target, event) {
         event.preventDefault()
         const oldPassword = target.oldPassword.value;
         const newPassword = target.newPassword.value;
@@ -177,11 +183,38 @@ export class Login {
             let headers = this.getAuthHeader();
             headers["Content-Type"] = "application/json"
 
-            ApiRequest.apiRequest("put", this.passwordChangeRoute, headers, payload, (stat, response) => {
+            await ApiRequest.apiRequest("put", this.passwordChangeRoute, headers, payload, (stat, response) => {
                 alert(response);
                 components.closeForm();
             })
         }
         return false;
+    }
+
+    static async editUser(userId) {
+        const name =document.getElementById("editUserName").value;
+        const email =document.getElementById("editUserEmail").value;
+
+        const payload = JSON.stringify({
+            id : userId,
+            name : name,
+            email : email
+        })
+
+        let headers = this.getAuthHeader();
+        headers["Content-Type"] = "application/json"
+
+        await ApiRequest.apiRequest("put", this.editUserRoute, headers, payload, (stat, response) => {
+            if (response != 200) {
+                console.log(response);
+            }
+            components.reloadTable("user");
+        })
+    }
+
+    static async deleteUser(userId) {
+        await ApiRequest.apiRequest("delete", this.deleteUserRoute + "/" + userId, this.getAuthHeader(), null, (stat, response) => {
+            components.reloadTable("user");
+        })
     }
 }

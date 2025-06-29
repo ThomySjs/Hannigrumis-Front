@@ -27,7 +27,7 @@ export class LoginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return Login.getRecoveryCode(this)">
+            <form class="form recovery" onsubmit="return Login.getRecoveryCode(this, event)">
                 <label>
                     Correo
                 </label>
@@ -42,7 +42,7 @@ export class LoginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return Login.sendRecoveryCode(this)">
+            <form class="form recovery" onsubmit="return Login.sendRecoveryCode(this, event)">
                 <label>
                     Código
                 </label>
@@ -57,7 +57,7 @@ export class LoginComponents {
         const container = document.getElementById(containerId);
 
         const form = `
-            <form class="form recovery" onsubmit="return Login.recoverPassword(this)">
+            <form class="form recovery" onsubmit="return Login.recoverPassword(this, event)">
                 <label>
                     Contraseña
                 </label>
@@ -74,10 +74,15 @@ export class LoginComponents {
 
     displayMessage(target, message) {
         let form = document.getElementById(target);
-
-        let messageHTML = `
-            <h4 style="color: #FF677D;">${message}</h4>
-        `;
-        form.insertAdjacentHTML("afterbegin", messageHTML);
+        let existingMessage = document.getElementById("message");
+        if (!existingMessage) {
+            let messageHTML = `
+            <h4 id="message" style="color: #FF677D;">${message}</h4>
+            `;
+            form.insertAdjacentHTML("afterbegin", messageHTML);
+        }
+        else {
+            existingMessage.innerText = message;
+        }
     }
 }

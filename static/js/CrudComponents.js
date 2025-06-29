@@ -1,12 +1,14 @@
 import { ApiRequest } from "./ApiRequest.js";
 import { Category } from "./model/Category.js";
 import { Product } from "./model/Product.js";
+import { User } from "./model/User.js";
 
 export class CrudComponents {
     backendUrl = window.env.API_URL;
     categoryRoute = window.env.CATEGORY_ROUTE;
     imageRoute = window.env.IMAGE_ROUTE;
     productRoute = window.env.PRODUCT_ROUTE;
+    getUsersRoute = window.env.GET_USERS;
 
     async init() {
         await this.loadCategories();
@@ -15,7 +17,7 @@ export class CrudComponents {
         this.createAddProductForm();
         this.createProductList();
         if (Login.isAdmin()) {
-            this.showRegisterUserButton();
+            this.showUserListButton();
         }
     }
 
@@ -23,18 +25,30 @@ export class CrudComponents {
         this.categories = []
         await ApiRequest.apiRequest("get", this.categoryRoute + "all?order=" + order, {},  null, (stat, data) => {
             data.forEach((category) => {
-            const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
-            this.categories.push(newCategory);
-        })});
+                const newCategory = new Category(category.id, category.name, category.description, category.imagePath);
+                this.categories.push(newCategory);
+            });
+        });
     }
 
     async loadProducts(order = "id") {
         this.products = [];
         await ApiRequest.apiRequest("get", this.productRoute + "all?order=" + order, {}, null, (stat, data) => {
             data.forEach((product) => {
-            const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
-            this.products.push(newProduct);
-        })});
+                const newProduct = new Product(product.id ,product.name, product.categoryId.name, product.imagePath);
+                this.products.push(newProduct);
+            });
+        });
+    }
+
+    async loadUsers() {
+        this.users = [];
+        await ApiRequest.apiRequest("get", this.getUsersRoute, Login.getAuthHeader(), null, (stat, data) => {
+            data.forEach((user) => {
+                const newUser = new User(user.id, user.name, user.email, user.verified);
+                this.users.push(newUser);
+            })
+        });
     }
 
     getCategoryByName(categoryName) {
@@ -44,13 +58,19 @@ export class CrudComponents {
     async reloadTable(type, order = "id") {
         const container = document.getElementById("listContainer");
         container.innerHTML = "";
-        if (type === "product") {
-            await this.loadProducts(order);
-            this.createProductList();
-        }
-        if (type === "category") {
-            await this.loadCategories(order);
-            this.createCategoryList();
+        switch(type) {
+            case "product":
+                await this.loadProducts(order);
+                this.createProductList();
+                break;
+            case "category":
+                await this.loadCategories(order);
+                this.createCategoryList();
+                break;
+            case "user":
+                await this.loadUsers();
+                this.createUserList();
+                break;
         }
     }
 
@@ -67,6 +87,7 @@ export class CrudComponents {
         overlay.style.display = "none";
         container.style.display = "none";
     }
+
 
     createSelectButtons() {
         const container = document.getElementById("formButtons");
@@ -91,24 +112,41 @@ export class CrudComponents {
         });
 
         document.getElementById("crudSelection").addEventListener("change", (event) => {
-            if (event.target.value === "product") {
-                button.addEventListener("click", (e) => {
-                    this.createAddProductForm();
-                    this.showForm();
-                });
-                this.reloadTable(event.target.value)
-            }
-            if (event.target.value === "category") {
-                button.addEventListener("click", (e) => {
-                    this.createAddCategoryForm();
-                    this.showForm();
-                });
+            if (event.target.value === "user") {
                 this.reloadTable(event.target.value);
+                button.addEventListener("click", (e) => {
+                    this.registerUserForm();
+                });
             }
-            sortButton.addEventListener("click", () => {
-                this.mobileSortOptions(event.target.value);
-            })
+            else {
+                if (event.target.value === "product") {
+                    button.addEventListener("click", (e) => {
+                        this.createAddProductForm();
+                        this.showForm();
+                    });
+                    this.reloadTable(event.target.value)
+                }
+                if (event.target.value === "category") {
+                    button.addEventListener("click", (e) => {
+                        this.createAddCategoryForm();
+                        this.showForm();
+                    });
+                    this.reloadTable(event.target.value);
+                }
+                sortButton.addEventListener("click", () => {
+                    this.mobileSortOptions(event.target.value);
+                })
+            }
         });
+    }
+
+    showUserListButton() {
+        const container = document.getElementById("crudSelection");
+
+        const button = `
+            <option value="user">Usuarios</option>
+        `
+        container.insertAdjacentHTML("beforeend", button);
     }
 
     createAddProductForm() {
@@ -333,6 +371,45 @@ export class CrudComponents {
         rowElement.classList.add("editingField");
     }
 
+    createUserList() {
+        const container = document.getElementById("listContainer");
+        const table = document.createElement("table");
+        const tableBody = document.createElement("tbody");
+        table.id = "list"
+        const tableHeaders = `
+            <tr id="headers">
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Verificado</th>
+                <th style="text-align:center;">Acción</th>
+            </tr>
+        `;
+        tableBody.insertAdjacentHTML("beforeend", tableHeaders);
+        let verified = "No";
+        this.users.forEach((user) => {
+            if (user.isVerified()) {
+                verified = "Sí"
+            }
+            const tableRows =`
+                <tr id="${user.getId()}">
+                    <td id="idContainer">${user.getId()}</td>
+                    <td>${user.getName()}</td>
+                    <td>${user.getEmail()}</td>
+                    <td>${verified}</td>
+                    <td id="actionButtons">
+                        <button id="deleteButton" onclick="Login.deleteUser('${user.getId()}')"><i class="fa-solid fa-trash" style="color: #fef3f1;font-size:1.5rem;"></i></i></button>
+                        <button id="editButton" onclick='components.createEditUserForm("${user.getId()}", "${user.getName()}","${user.getEmail()}", "${verified}")'><i class="fa-solid fa-pen-to-square" style="color: #fef3f1;font-size:1.5rem;"></i></button>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML("beforeend", tableRows);
+        });
+
+        table.appendChild(tableBody);
+        container.appendChild(table);
+    };
+
     registerUserForm() {
         const container = document.getElementById("formContainer");
         let form = `
@@ -356,6 +433,33 @@ export class CrudComponents {
         `;
         container.innerHTML = form;
         this.showForm();
+    }
+
+    createEditUserForm(userId, userName, userEmail, verified) {
+        const editingRow = document.querySelector(".editingField");
+        if (editingRow) {
+            return false;
+        }
+
+        const rowElement = document.getElementById(userId);
+
+        const tableRow =`
+            <td>${userId}</td>
+            <td><input type="text" id="editUserName"  value="${userName}"/></td>
+            <td><input type="text" id="editUserEmail" value="${userEmail}"/></td>
+            <td>${verified}</td>
+            <td id="actionButtons">
+                <button type="button" id="sendEdit" onclick="Login.editUser(${userId})">
+                    <i class="fa-solid fa-check" style="color: #ffffff;font-size:1.5rem;"></i>
+                </button>
+                <button id="cancelEditButton" onclick="components.reloadTable('user')">
+                    <i class="fa-solid fa-xmark" style="color: #ffffff;font-size:1.5rem;"></i>
+                </button>
+            </td>
+        `
+
+        rowElement.innerHTML = tableRow;
+        rowElement.classList.add("editingField");
     }
 
     mobileSortOptions(type) {
@@ -412,23 +516,6 @@ export class CrudComponents {
     async changeProductOrder(order) {
         await this.loadProducts(order);
         this.createAddProductForm();
-    }
-
-    showRegisterUserButton() {
-        const container  = document.getElementById("userButtons");
-        const button = document.createElement("a");
-        button.innerHTML = `
-            <i class="fa-solid fa-user-plus user-option"></i>
-            <label>
-                Registrar usuario
-            </label>
-        `
-        button.addEventListener("click", () => {
-            this.showUserButtons();
-            this.registerUserForm();
-        })
-
-        container.insertAdjacentElement("afterbegin", button);
     }
 
     showUserButtons() {
