@@ -386,11 +386,9 @@ export class CrudComponents {
             </tr>
         `;
         tableBody.insertAdjacentHTML("beforeend", tableHeaders);
-        let verified = "No";
+        let verified;
         this.users.forEach((user) => {
-            if (user.isVerified()) {
-                verified = "Sí"
-            }
+            verified = (user.isVerified())? "Sí" : "No";
             const tableRows =`
                 <tr id="${user.getId()}">
                     <td id="idContainer">${user.getId()}</td>
