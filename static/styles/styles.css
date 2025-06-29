@@ -363,6 +363,38 @@ p {
     font-size: 5rem;
 }
 
+#footer {
+    padding: 120px 60px;
+    width: 100%;
+    background-color: var(--light-color);
+    display: flex;
+    flex-direction: column;
+}
+
+#footer-text {
+    text-align: center;
+}
+
+#footer-text h4 {
+    color: var(--contrast-color);
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+    font-weight: 300;
+}
+
+#footer-icons {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.social-media {
+    font-size: 2rem;
+    color: var(--contrast-color);
+}
+
 
 /* Responsive */
 @media (max-width: 1200px) {

@@ -9,5 +9,6 @@ window.env = {
     CHANGE_PASSWORD_ROUTE : "change-password",
     CONTACT_EMAIL : "",
     WHATSAPP : "",
-    REGISTER_ROUTE : "register"
+    INSTAGRAM : "",
+    FACEBOOK : ""
 }
