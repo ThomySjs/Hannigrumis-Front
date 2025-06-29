@@ -104,7 +104,7 @@
         <form method="POST" id="contact-form">
             <input type="email" name="email" placeholder="Correo" required>
             <input type="text" name="name" placeholder="Nombre">
-            <input type="tel" name="phone" placeholder="Número de telefono" required> 
+            <input type="tel" name="phone" placeholder="Número de telefono" required>
             <textarea name="message" placeholder="Mensaje"></textarea>
             <input type="submit">
         </form>
@@ -129,6 +129,8 @@
     <script>
         document.getElementById("whatsapp-button").href = "https://wa.me/" + window.env.WHATSAPP;
         document.getElementById("contact-form").action = "https://formsubmit.co/" + window.env.CONTACT_EMAIL;
+        document.getElementById("instagram-icon").href = window.env.INSTAGRAM;
+        document.getElementById("facebook-icon").href = window.env.FACEBOOK;
     </script>
 </body>
 </html>
