@@ -41,9 +41,9 @@ export class CrudComponents {
         });
     }
 
-    async loadUsers() {
+    async loadUsers(order = "id") {
         this.users = [];
-        await ApiRequest.apiRequest("get", this.getUsersRoute, Login.getAuthHeader(), null, (stat, data) => {
+        await ApiRequest.apiRequest("get", this.getUsersRoute + "?order=" + order, Login.getAuthHeader(), null, (stat, data) => {
             data.forEach((user) => {
                 const newUser = new User(user.id, user.name, user.email, user.verified);
                 this.users.push(newUser);
@@ -68,7 +68,7 @@ export class CrudComponents {
                 this.createCategoryList();
                 break;
             case "user":
-                await this.loadUsers();
+                await this.loadUsers(order);
                 this.createUserList();
                 break;
         }
@@ -319,7 +319,7 @@ export class CrudComponents {
 
         this.categories.forEach((category) => {
             const tableRows =`
-                <tr id="${category.getId()}"> 
+                <tr id="${category.getId()}">
                     <td id="idContainer">${category.getId()}</td>
                     <td>${category.getName()}</td>
                     <td>${category.getDescription()}</td>
@@ -345,7 +345,6 @@ export class CrudComponents {
         }
 
         const rowElement = document.getElementById(categoryId);
-        
         const tableRow =`
             <td>${categoryId}</td>
             <td><input type="text" class="editCategoryName"  value="${categoryName}"></td>
@@ -357,7 +356,7 @@ export class CrudComponents {
                     Subir imagen
                 </label>
             </td>
-            <td id="actionButtons"> 
+            <td id="actionButtons">
                 <button type="button" id="sendEdit" onclick="app.editCategory(this, ${categoryId}, event)">
                     <i class="fa-solid fa-check" style="color: #ffffff;font-size:1.5rem;"></i>
                 </button>
@@ -378,10 +377,10 @@ export class CrudComponents {
         table.id = "list"
         const tableHeaders = `
             <tr id="headers">
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Verificado</th>
+                <th><a class="sort" onclick="components.reloadTable('user', 'id')">ID</a></th>
+                <th><a class="sort" onclick="components.reloadTable('user', 'name')">Nombre</a></th>
+                <th><a class="sort" onclick="components.reloadTable('user', 'email')">Email</a></th>
+                <th><a class="sort" onclick="components.reloadTable('user', 'verified')">Verificado</a></th>
                 <th style="text-align:center;">Acción</th>
             </tr>
         `;
@@ -478,6 +477,16 @@ export class CrudComponents {
                     <a onclick="components.reloadTable('${type}', 'id')">ID</a>
                     <a onclick="components.reloadTable('${type}', 'name')">Nombre</a>
                     <a onclick="components.reloadTable('${type}', 'description')">Descripción</a>
+                </div>
+            `;
+        }
+        else if (type === "user") {
+            options = `
+                <div class="sort-options-container">
+                    <a onclick="components.reloadTable('${type}', 'id')">ID</a>
+                    <a onclick="components.reloadTable('${type}', 'name')">Nombre</a>
+                    <a onclick="components.reloadTable('${type}', 'email')">Email</a>
+                    <a onclick="components.reloadTable('${type}', 'verified')">Verificado</a>
                 </div>
             `;
         }
