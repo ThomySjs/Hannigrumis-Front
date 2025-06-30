@@ -156,12 +156,12 @@ export class Login {
                 if (stat == 200) {
                     window.components.loginForm(container)
                     window.components.displayMessage(container, response);
+                    sessionStorage.removeItem("recovery-token");
                 }
                 else {
                     window.components.displayMessage(container, response);
                 }
             });
-            sessionStorage.removeItem("recovery-token");
         }
         return false;
     }
