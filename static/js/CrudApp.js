@@ -21,7 +21,7 @@ export class CrudApp {
         const LoggedIn = await Login.checkAuthorization();
     
         if (LoggedIn) {
-            window.location.href = "crud.html"
+            window.location.href = "admin-panel.html"
         }
         components.init();
     }

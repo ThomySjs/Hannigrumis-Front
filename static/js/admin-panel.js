@@ -9,7 +9,7 @@ async function main() {
     window.app = newApp;
     const currentLocation = window.location.href.split("/").pop();
     switch(currentLocation) {
-        case "crud.html":
+        case "admin-panel.html":
             window.components = new CrudComponents();
             await window.app.initCrud();
             break;

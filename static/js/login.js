@@ -95,7 +95,7 @@ export class Login {
             }
             else {
                 sessionStorage.setItem("AuthorizationToken", data["token"]);
-                window.location.href = "crud.html"
+                window.location.href = "admin-panel.html"
             }
         });
         return false;
