@@ -19,13 +19,13 @@ export class CrudApp {
 
     async initLogin() {
         const LoggedIn = await Login.checkAuthorization();
-    
+
         if (LoggedIn) {
             window.location.href = "admin-panel.html"
         }
         components.init();
     }
-    
+
     ////////////////////////////
     /// CRUD functionalities ///
     ////////////////////////////
@@ -63,7 +63,7 @@ export class CrudApp {
                 await components.reloadTable("product");
             }
         });
-        
+
         return false;
     }
 

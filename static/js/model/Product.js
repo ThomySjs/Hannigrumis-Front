@@ -24,7 +24,7 @@ export class Product {
 
     setID(anID) {
         this.id = anID;
-    } 
+    }
 
     setName(aName) {
         this.name = aName;

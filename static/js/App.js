@@ -8,13 +8,13 @@ export class App {
     categoryRoute = window.env.CATEGORY_ROUTE;
     imageRoute = window.env.IMAGE_ROUTE;
     productRoute = window.env.PRODUCT_ROUTE;
-    
+
     async init() {
         await this.loadCategories();
         await this.loadProducts();
         this.createCategoryCards();
     }
-        
+
     async loadCategories() {
         this.categories = []
         await ApiRequest.apiRequest("get", this.categoryRoute + "all", {},  null, (stat, data) => {

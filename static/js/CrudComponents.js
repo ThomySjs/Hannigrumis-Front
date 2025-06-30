@@ -207,12 +207,12 @@ export class CrudComponents {
         this.products.forEach((product) => {
             const category = this.getCategoryByName(product.getCategory())[0];
             const tableRows =`
-                <tr id="${product.getID()}"> 
+                <tr id="${product.getID()}">
                     <td id="idContainer">${product.getID()}</td>
                     <td>${product.getName()}</td>
                     <td>${product.getCategory()}</td>
                     <td id="listImage"><img src="${this.backendUrl + this.imageRoute + product.getImagePath()}"/></td>
-                    <td id="actionButtons"> 
+                    <td id="actionButtons">
                         <button id="deleteButton" onclick="app.deleteProduct(${product.id})"><i class="fa-solid fa-trash" style="color: #fef3f1;font-size:1.5rem;"></i></i></button>
                         <button id="editButton" onclick='components.createEditProductForm(${product.getID()},"${product.getName()}","${category.getId()}")'><i class="fa-solid fa-pen-to-square" style="color: #fef3f1;font-size:1.5rem;"></i></button>
                     </td>
@@ -258,7 +258,7 @@ export class CrudComponents {
                     Subir imagen
                 </label>
             </td>
-            <td id="actionButtons"> 
+            <td id="actionButtons">
                 <button type="button" id="sendEdit" onclick="app.editProduct(this, ${productId}, event)">
                     <i class="fa-solid fa-check" style="color: #ffffff;font-size:1.5rem;"></i>
                 </button>
