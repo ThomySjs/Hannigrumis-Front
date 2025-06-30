@@ -29,4 +29,24 @@ window.env = {
     FACEBOOK : ""              // Enlace a Facebook.
 }
 ```
+---
+## 🖼️ Imágenes del Proyecto
+
+### 🏠 Página Principal
+
+**📌 Portada**
+![Portada](./static/readme/hero-section.jpg)
+
+**🛍️ Productos**
+![Productos](./static/readme/products.jpg)
+
+---
+
+### 🔐 Página de Inicio de Sesión
+![Inicio de Sesión](./static/readme/login.jpg)
+
+---
+
+### 🛠️ Panel de Control
+![Panel de Control](./static/readme/admin-panel.jpg)
 
