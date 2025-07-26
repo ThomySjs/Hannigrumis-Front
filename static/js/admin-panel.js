@@ -9,10 +9,12 @@ async function main() {
     window.app = newApp;
     const currentLocation = window.location.href.split("/").pop();
     switch(currentLocation) {
+        case "panel":
         case "admin-panel.html":
             window.components = new CrudComponents();
             await window.app.initCrud();
             break;
+        case "login":
         case "login.html":
             window.components = new LoginComponents();
             await window.app.initLogin();
