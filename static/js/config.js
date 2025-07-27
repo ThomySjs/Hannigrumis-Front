@@ -12,7 +12,7 @@ window.env = {
     EDIT_USER_ROUTE : "edit-user",
     DELETE_USER_ROUTE : "delete-user",
     CONTACT_EMAIL : "melanyestefaniafernandez@hotmail.com",
-    WHATSAPP : "2920256742",
+    WHATSAPP : "5492920256742",
     INSTAGRAM : "https://www.instagram.com/hannigrumis/",
     FACEBOOK : "https://www.facebook.com/melany.fernandez.160148"
 }

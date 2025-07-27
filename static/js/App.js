@@ -70,10 +70,12 @@ export class App {
         }
         else {
             products.forEach((product) => {
+                const message = 'Hola! me interesa el amigurumi ' + product.getName() + ' ¿Podrías enviarme más información?'
                 const productCard =  `
-                    <div class="card">
+                    <div class="card product-card">
                         <img src="${this.backendUrl + this.imageRoute + product.getImagePath()}" alt="${product.getName()}" />
                         <h3>${product.getName()}</h3>
+                        <a class="buy-button" href='https://wa.me/${window.env.WHATSAPP}?text=${message}' target='_blank'>Hacer pedido</a>
                     </div>
                 `;
 
