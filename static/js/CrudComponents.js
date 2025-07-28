@@ -211,7 +211,7 @@ export class CrudComponents {
                     <td id="idContainer">${product.getID()}</td>
                     <td>${product.getName()}</td>
                     <td>${product.getCategory()}</td>
-                    <td id="listImage"><img src="${this.backendUrl + this.imageRoute + product.getImagePath()}"/></td>
+                    <td id="listImage"><img src="${product.getImagePath()}"/></td>
                     <td id="actionButtons">
                         <button id="deleteButton" onclick="app.deleteProduct(${product.id})"><i class="fa-solid fa-trash" style="color: #fef3f1;font-size:1.5rem;"></i></i></button>
                         <button id="editButton" onclick='components.createEditProductForm(${product.getID()},"${product.getName()}","${category.getId()}")'><i class="fa-solid fa-pen-to-square" style="color: #fef3f1;font-size:1.5rem;"></i></button>
@@ -323,7 +323,7 @@ export class CrudComponents {
                     <td id="idContainer">${category.getId()}</td>
                     <td>${category.getName()}</td>
                     <td>${category.getDescription()}</td>
-                    <td id="listImage"><img src="${this.backendUrl + this.imageRoute + category.getImagePath()}"/></td>
+                    <td id="listImage"><img src="${category.getImagePath()}"/></td>
                     <td id="actionButtons">
                         <button id="deleteButton" onclick="app.deleteCategory('${category.getId()}')"><i class="fa-solid fa-trash" style="color: #fef3f1;font-size:1.5rem;"></i></i></button>
                         <button id="editButton" onclick='components.createEditCategoryForm("${category.getId()}", "${category.getName()}","${category.getDescription()}")'><i class="fa-solid fa-pen-to-square" style="color: #fef3f1;font-size:1.5rem;"></i></button>

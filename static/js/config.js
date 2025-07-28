@@ -2,7 +2,6 @@ window.env = {
     API_URL : "https://dutch-viki-thomy-c35db37f.koyeb.app/",
     CATEGORY_ROUTE : "category/",
     PRODUCT_ROUTE : "product/",
-    IMAGE_ROUTE : "image/",
     LOGIN_ROUTE : "login",
     CHECK_TOKEN_ROUTE : "valid-user",
     RECOVERY_ROUTE : "reset-password",

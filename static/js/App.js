@@ -44,7 +44,7 @@ export class App {
         this.categories.forEach((category) => {
             let categoryComponent =  `
                 <div class="card" id="${category.getName()}" onclick="app.createProductCards('${category.getName()}')">
-                    <img src="${this.backendUrl + this.imageRoute + category.getImagePath()}" alt="Amigurumis" />
+                    <img src="${category.getImagePath()}" alt="Amigurumis" />
                     <h3>${category.getName()}</h3>
                     <div class="overlay">
                         <p>${category.getDescription()}</p>
@@ -73,7 +73,7 @@ export class App {
                 const message = 'Hola! me interesa el amigurumi ' + product.getName() + ' ¿Podrías enviarme más información?'
                 const productCard =  `
                     <div class="card product-card">
-                        <img src="${this.backendUrl + this.imageRoute + product.getImagePath()}" alt="${product.getName()}" />
+                        <img src="${product.getImagePath()}" alt="${product.getName()}" />
                         <h3>${product.getName()}</h3>
                         <a class="buy-button" href='https://wa.me/${window.env.WHATSAPP}?text=${message}' target='_blank'>Hacer pedido</a>
                     </div>
