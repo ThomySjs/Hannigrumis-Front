@@ -1,5 +1,5 @@
 window.env = {
-    API_URL : "https://dutch-viki-thomy-c35db37f.koyeb.app/",
+    API_URL : "https://urgent-klarrisa-hannigrumis-72c13f10.koyeb.app/",
     CATEGORY_ROUTE : "category/",
     PRODUCT_ROUTE : "product/",
     LOGIN_ROUTE : "login",
